@@ -1,0 +1,19 @@
+﻿@page "/"
+@using BlazingPizza.Models
+
+<PageTitle>Home</PageTitle>
+
+<h1>Blazing Pizzas</h1>
+
+@code {
+    List<PizzaSpecial> specials = new();
+
+    protected override void OnInitialized()
+    {
+        specials.AddRange(new List<PizzaSpecial>
+        {
+            new PizzaSpecial{Name = "", BasePrice=11.99M, Description="", ImageUrl=""}
+        }
+        );
+    }
+}
