@@ -5,6 +5,7 @@
 
 <div class="main">
 <h1>Blazing Pizzas</h1>
+<ul class="pizza-cards">
 @if(specials != null)
 {
     foreach(var special in specials)
@@ -18,6 +19,7 @@
         </li>
     }
 }
+  </ul>
 </div>
 
 @code {
@@ -27,7 +29,7 @@
     {
         specials.AddRange(new List<PizzaSpecial>
 {
-new PizzaSpecial{Name = "The Baconatorizor", BasePrice=11.99M, Description="t has EVERY kind of bacon",
+new PizzaSpecial{Name = "The Baconatorizor", BasePrice=11.99M, Description="It has EVERY kind of bacon",
 ImageUrl="img/pizzas/bacon.jpg"},
        new PizzaSpecial { Name = "Buffalo chicken", BasePrice =  12.75M, Description = "Spicy chicken, hot sauce, and blue cheese, guaranteed to warm you up", ImageUrl="img/pizzas/meaty.jpg"},
             new PizzaSpecial { Name = "Veggie Delight", BasePrice =  11.5M, Description = "It's like salad, but on a pizza", ImageUrl="img/pizzas/salad.jpg"},

@@ -1,7 +1,8 @@
 genl
-    using net8 not net9
+    using net8 not net6
     public repos
 
+git clone https://github.com/MicrosoftDocs/mslearn-interact-with-data-blazor-web-apps.git BlazingPizza
 bookmark, upto
     20240609
     https://learn.microsoft.com/en-us/training/modules/interact-with-data-blazor-web-apps/3-exercise-create-user-interfaces-with-blazor-components
