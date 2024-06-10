@@ -1,5 +1,7 @@
 ﻿@page "/"
 @using BlazingPizza.Models
+@using Dapper
+@inject ISQLite3Ctrl sqc
 
 <PageTitle>Home</PageTitle>
 
@@ -14,7 +16,7 @@
             <div class="pizza-info">
         <span class="title"> @special.Name</span>
         @special.Description
-        <span class="price"> @special.GetFormmattedBasePrice()</span>
+        <span class="price"> @special.Price</span>
         </div>
         </li>
     }
@@ -23,12 +25,27 @@
 </div>
 
 @code {
-    List<PizzaSpecial> specials = new();
+    //List<PizzaSpecial> specials = new();
+    IEnumerable<dynamic> specials;
 
     protected override void OnInitialized()
     {
-        specials.AddRange(new List<PizzaSpecial>
-{
+
+//                        _logger.LogInformation("customer index get");
+            using var conn = sqc.Sqlite3Conn;
+            @* var p = new { sf1 = LCF.FilterValue + "%" };
+            //var p2 = new { sf2 = "Address" };
+            string fieldName = LCF.FilterField ?? "Name"; //todo "Name";
+            string SortField = LCF.SortField ?? "Name"; //todo "Name";
+            string SortOrder = LCF.SortOrder ? "DESC" : ""; //todo "Name"; *@
+//            var sql = $"select * from Customer where {fieldName} like @sf1 order by {SortField} {SortOrder}";
+            var sql = "select * from Pizza";
+            specials = conn.Query<dynamic>(sql); //todo: param, p); //todo:.ToList(); //todo: using
+            @* foreach (var c in Customers)
+            {
+                Console.WriteLine(c.Name);
+            } *@
+@* {
 new PizzaSpecial{Name = "The Baconatorizor", BasePrice=11.99M, Description="It has EVERY kind of bacon",
 ImageUrl="img/pizzas/bacon.jpg"},
        new PizzaSpecial { Name = "Buffalo chicken", BasePrice =  12.75M, Description = "Spicy chicken, hot sauce, and blue cheese, guaranteed to warm you up", ImageUrl="img/pizzas/meaty.jpg"},
@@ -38,6 +55,6 @@ ImageUrl="img/pizzas/bacon.jpg"},
             new PizzaSpecial { Name = "Classic pepperoni", BasePrice =  10.5M, Description = "It's the pizza you grew up with, but Blazing hot!", ImageUrl="img/pizzas/pepperoni.jpg" }               
 
 }
-        );
+        ); *@
     }
 }

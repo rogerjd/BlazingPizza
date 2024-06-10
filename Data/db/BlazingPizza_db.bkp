@@ -1,0 +1,108 @@
+PRAGMA foreign_keys=OFF;
+BEGIN TRANSACTION;
+CREATE TABLE IF NOT EXISTS "user" (
+	"id"	INTEGER,
+	"username"	TEXT NOT NULL UNIQUE,
+	"password"	TEXT NOT NULL,
+	"num"	INTEGER,
+	PRIMARY KEY("id" AUTOINCREMENT)
+);
+CREATE TABLE IF NOT EXISTS "note" (
+	"id"	INTEGER NOT NULL UNIQUE,
+	"customer_id"	INTEGER,
+	"status"	TEXT NOT NULL,
+	"text"	TEXT,
+	PRIMARY KEY("id" AUTOINCREMENT)
+);
+CREATE TABLE IF NOT EXISTS "job_line" (
+	"id"	INTEGER NOT NULL UNIQUE,
+	"job_id"	INTEGER,
+	"date"	TEXT NOT NULL,
+	"desc"	TEXT,
+	"amt"	INTEGER,
+	FOREIGN KEY("job_id") REFERENCES "jobbkp"("id") ON DELETE CASCADE,
+	PRIMARY KEY("id" AUTOINCREMENT)
+);
+INSERT INTO job_line VALUES(3,3,'2023-06-02','chk ac ln',75);
+INSERT INTO job_line VALUES(4,4,'2023-08-10 00:00:00','clean leaves out of pool test xyz97ab',100);
+INSERT INTO job_line VALUES(5,3,'2023-08-17','take out garbage',49.499999999999999998);
+CREATE TABLE IF NOT EXISTS "job_status" (
+	"id"	INTEGER,
+	"status"	TEXT
+);
+INSERT INTO job_status VALUES(1,'Queued');
+INSERT INTO job_status VALUES(2,'Working');
+INSERT INTO job_status VALUES(3,'Paused');
+INSERT INTO job_status VALUES(4,'Completed');
+CREATE TABLE IF NOT EXISTS "Customer" (
+	"ID"	INTEGER NOT NULL UNIQUE,
+	"customer_no"	TEXT,
+	"Name"	TEXT,
+	"Address"	TEXT,
+	"phone"	TEXT,
+	"email"	TEXT, State Text, Notes Text,
+	PRIMARY KEY("ID" AUTOINCREMENT)
+);
+INSERT INTO Customer VALUES(1,'123','ABC Plumbing 1234','123-A Main St',NULL,NULL,'NJ2','abc');
+INSERT INTO Customer VALUES(2,'43','ferrosource','57 Park St #A',NULL,NULL,NULL,NULL);
+INSERT INTO Customer VALUES(5,NULL,'ABC Tree Service','87 Towne St',NULL,NULL,NULL,NULL);
+INSERT INTO Customer VALUES(6,NULL,'Jerry''s Drain Cleaning','47 Plum Lnx',NULL,NULL,NULL,NULL);
+INSERT INTO Customer VALUES(7,NULL,'Flack Global Metal','123 Upstate, NY',NULL,NULL,NULL,NULL);
+CREATE TABLE IF NOT EXISTS "master" (
+	"id"	INTEGER,
+	"name"	INTEGER,
+	PRIMARY KEY("id" AUTOINCREMENT)
+);
+INSERT INTO master VALUES(1,'A');
+CREATE TABLE IF NOT EXISTS "detail" (
+	"id"	INTEGER,
+	"desc"	TEXT,
+	"masterid"	INTEGER,
+	PRIMARY KEY("id" AUTOINCREMENT)
+);
+INSERT INTO detail VALUES(1,'abc',1);
+INSERT INTO detail VALUES(2,'def',1);
+CREATE TABLE IF NOT EXISTS "jobbkp" (
+	"id"	INTEGER NOT NULL UNIQUE,
+	"job_no"	TEXT NOT NULL UNIQUE,
+	"cust_no"	INTEGER NOT NULL,
+	"priority"	INTEGER,
+	"pct_done"	INTEGER,
+	"job_size"	NUMERIC,
+	"desc"	TEXT,
+	"held"	REAL,
+	"status"	NUMERIC,
+	"bal_due"	INTEGER,
+	"queue"	TEXT,
+	"CustomerID"	INTEGER,
+	PRIMARY KEY("id" AUTOINCREMENT),
+	FOREIGN KEY("cust_no") REFERENCES "Customer"("ID") ON DELETE CASCADE,
+	FOREIGN KEY("CustomerID") REFERENCES "Customer"("ID")
+);
+INSERT INTO jobbkp VALUES(3,'4',2,NULL,NULL,NULL,'satelite dish, installx',NULL,3,NULL,NULL,1);
+INSERT INTO jobbkp VALUES(4,'5',2,NULL,NULL,NULL,'need a/c line pressure chk',NULL,1,NULL,NULL,2);
+INSERT INTO jobbkp VALUES(5,'231',2,NULL,NULL,NULL,'test cust no',NULL,1,'',NULL,NULL);
+INSERT INTO jobbkp VALUES(6,'4534',1,NULL,NULL,NULL,'test cust no',NULL,1,'',NULL,NULL);
+INSERT INTO jobbkp VALUES(7,'43',2,NULL,NULL,NULL,'test cust no',NULL,1,NULL,NULL,NULL);
+CREATE TABLE IF NOT EXISTS "job" (
+	"ID"	INTEGER,
+	"JobNo"	Text,
+	"desc"	TEXT,
+	"CustomerID"	INTEGER NOT NULL,
+	"StatusID"	INTEGER,
+	"Balance"	NUMERIC,
+	PRIMARY KEY("ID" AUTOINCREMENT)
+);
+INSERT INTO job VALUES(1,'34-A','job 1',1,1,2);
+INSERT INTO job VALUES(2,'321','job 2',1,4,4);
+INSERT INTO job VALUES(3,'978-Q','test',1,3,NULL);
+INSERT INTO job VALUES(4,'873-Z','do something in backyard',2,2,-5);
+INSERT INTO job VALUES(5,'543','Drain cleaning, at cust 6',6,3,NULL);
+DELETE FROM sqlite_sequence;
+INSERT INTO sqlite_sequence VALUES('note',0);
+INSERT INTO sqlite_sequence VALUES('job_line',5);
+INSERT INTO sqlite_sequence VALUES('Customer',9);
+INSERT INTO sqlite_sequence VALUES('master',1);
+INSERT INTO sqlite_sequence VALUES('detail',2);
+INSERT INTO sqlite_sequence VALUES('job',5);
+COMMIT;

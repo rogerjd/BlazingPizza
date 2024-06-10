@@ -1,0 +1,166 @@
+﻿using Microsoft.Extensions.Caching.Memory;
+using JIS2.Models;
+using Dapper;
+
+namespace JIS2.Services
+{
+    public interface ICustomerService : IBaseService<Customer>
+    {
+        //List<Car> ReadAll();
+        //void Create(Car car);
+        //Car Read(int id);
+        //void Update(Car car);
+        //void Delete(int id);
+    }
+
+    public class CustomerService : IBaseService<Customer>
+    {
+        private readonly ILogger<CustomerService> _logger;
+        private readonly ISQLite3Ctrl _SQLite3CtrlX;
+
+        public string ErrorMessage = "";
+
+        public CustomerService(ILogger<CustomerService> logger, ISQLite3Ctrl sqlctrl)
+        {
+            _logger = logger;
+            _SQLite3CtrlX = sqlctrl;
+        }
+
+        /*
+                public CarService(IMemoryCache cache)
+                {
+                    _cache = cache;
+                }
+        */
+
+        public void Create(Customer cust)
+        {
+            using var conn = _SQLite3CtrlX.Sqlite3Conn;
+            string sql = "INSERT INTO customer (name, address) values(@Name, @Address)";
+            int numRows = conn.Execute(sql, cust);
+
+            //          var cars = ReadAll(null);
+            //            cust.ID = cars.Max(c => c.Id) + 1;
+            //cars.Add(cust);
+            //_cache.Set(KeyName, cars);
+        }
+
+        public void Delete(int id)
+        {
+            using var conn = _SQLite3CtrlX.Sqlite3Conn;
+            var p = new { id };
+            var sql = "DELETE FROM Customer where ID = @id";
+            conn.Execute(sql, p);
+            /* todoL            
+                        var cars = ReadAll(null);
+                        var deletedCar = Read(id);
+                        cars.Remove(deletedCar);
+                        _cache.Set(KeyName, cars);
+            */
+        }
+
+        public Customer Read(int id)
+        {
+            //todo: if an error, can store it in this class(prop), or return 2 vars) or, log msg
+            Customer customer;
+            using var conn = _SQLite3CtrlX.Sqlite3Conn;
+            var p = new { id = id };
+            var sql = "select * from Customer where ID = @id";
+            customer = conn.QueryFirstOrDefault<Customer>(sql, p); //todo: param, p); //todo:.ToList(); //todo: using
+                                                          //            var c = ReadAll(null).SingleOrDefault(c => c.Id == id);
+            return customer;
+        }
+
+        // todo:
+        public IEnumerable<Customer> ReadAll(IQueryCollection parms)
+        {
+            bool paramUsesLike(string parm)
+            {
+                return parm == "name";
+
+            }
+            string paramToSQLFieldName(string parm)
+            {
+                if (parm == "cn")
+                    return "customer_no";
+
+                return parm;
+            }
+
+
+            // Create a dynamic SQL query
+            var sql = "SELECT * FROM Customer WHERE 1=1"; // Initial SQL query with a "1=1" condition
+
+            // Create an anonymous object to store Dapper parameters
+            var parameters = new DynamicParameters();
+
+            foreach (var key in parms.Keys)
+            {
+                var value = parms[key];
+                if (paramUsesLike(key))
+                {
+                    sql += $" AND {paramToSQLFieldName(key)} LIKE @{key}"; // Add a condition for each query parameter
+                    value += "%";
+                }
+                else
+                {
+                    sql += $" AND {paramToSQLFieldName(key)} = @{key}"; // Add a condition for each query parameter
+                }
+                // Add Dapper parameter for the current query parameter
+                parameters.Add(key, value);
+            }
+
+            // Execute the query using Dapper
+            using var conn = _SQLite3CtrlX.Sqlite3Conn;
+            var customers = conn.Query<Customer>(sql, parameters);
+            return customers;
+
+
+            /*
+                        if (_cache.Get(KeyName) == null)
+                        {
+                            List<Car> cars = new List<Car>
+                                {
+                                    new Car{Id=1, Make="Audi", Model="R8", Year=2018, Doors=2, Colour="Red", Price=79995},
+                                    new Car{Id=2, Make="Aston Martin", Model="Rapide", Year=2010, Doors=2, Colour="Black", Price=54995},
+                                    new Car{Id=3, Make="Porsche", Model="911 991", Year=2016, Doors=2, Colour="White", Price=155000},
+                                    new Car{Id=4, Make="Mercedes-Benz", Model="GLE 635", Year=2017, Doors=5, Colour="Blue", Price=83995},
+                                    new Car{Id=5, Make="BMW", Model="X6 M", Year=2016, Doors=5, Colour="Silver", Price=62995}
+                                };
+                            _cache.Set(KeyName, cars);
+                        }
+                        return _cache.Get<List<Customer>>(KeyName);
+            */
+        }
+
+        public void Update(Customer modifiedCustomer)
+        {
+            using var conn = _SQLite3CtrlX.Sqlite3Conn;
+            string sql = "update customer set name = @Name, address = @Address where id = @ID";
+            int numRows = conn.Execute(sql, modifiedCustomer);
+            // todo: if no rows?
+
+            //     if err != nil {
+            //         w.Write([]byte (err.Error())) //, http.StatusBadRequest)
+
+            // return
+
+        }
+    }
+
+
+    //var cars = ReadAll();
+    //var car = cars.Single(c => c.Id == modifiedCar.Id);
+    /*
+                var car = Read(modifiedCar.Id);
+                car.Make = modifiedCar.Make;
+                car.Model = modifiedCar.Model;
+                car.Doors = modifiedCar.Doors;
+                car.Colour = modifiedCar.Colour;
+                car.Year = modifiedCar.Year;
+                car.Price = modifiedCar.Price;
+    */
+    //_cache.Set(KeyName, cars); //iy's already in the list, right?
+}
+
+

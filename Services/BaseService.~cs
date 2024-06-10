@@ -1,0 +1,15 @@
+using Microsoft.AspNetCore.Http;
+using JIS2.Models;
+using System.Collections.Generic;
+
+namespace JIS2.Services
+{
+    public interface IBaseService<T>
+    {
+        IEnumerable<T> ReadAll(IQueryCollection parms);
+        void Create(T t);
+        T Read(int id);
+        void Update(T t);
+        void Delete(int id);
+    }
+}
