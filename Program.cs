@@ -6,6 +6,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 builder.Services.AddScoped<ISQLite3Ctrl, SQLite3Ctrl>();
+builder.Services.AddControllers();
 
 var app = builder.Build();
 
@@ -24,5 +25,7 @@ app.UseAntiforgery();
 
 app.MapRazorComponents<App>()
     .AddInteractiveServerRenderMode();
+
+app.MapControllers();
 
 app.Run();
