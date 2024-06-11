@@ -4,5 +4,5 @@ genl
 
 git clone https://github.com/MicrosoftDocs/mslearn-interact-with-data-blazor-web-apps.git BlazingPizza
 bookmark, upto
-    20240610
-        https://learn.microsoft.com/en-us/training/modules/interact-with-data-blazor-web-apps/5-exercise-access-data-from-blazor-components    
+    20240611
+        https://learn.microsoft.com/en-us/training/modules/interact-with-data-blazor-web-apps/7-exercise-share-data-in-blazor-applications        
