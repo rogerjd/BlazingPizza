@@ -1,4 +1,5 @@
 using BlazingPizza.Components;
+using BlazingPizza.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -7,6 +8,8 @@ builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 builder.Services.AddScoped<ISQLite3Ctrl, SQLite3Ctrl>();
 builder.Services.AddControllers();
+builder.Services.AddSingleton<PizzaService>();
+// services must agree
 
 var app = builder.Build();
 

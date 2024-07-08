@@ -23,6 +23,8 @@ namespace BlazingPizza.Controllers
             using var conn = _SQLite3CtrlX.Sqlite3Conn;
             var sql = "select * from Pizza";
             var res = conn.Query(sql);
+            
+            
             foreach (var r in res)
             {
                 Console.WriteLine(res);

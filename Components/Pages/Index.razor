@@ -1,60 +1,54 @@
 ﻿@page "/"
 @using BlazingPizza.Models
+@using BlazingPizza.Data
 @using Dapper
 @inject ISQLite3Ctrl sqc
+@inject PizzaService pizzaSvc
 
 <PageTitle>Home</PageTitle>
 
 <div class="main">
-<h1>Blazing Pizzas</h1>
-<ul class="pizza-cards">
-@if(specials != null)
-{
-    foreach(var special in specials)
-    {
-        <li style="background-image: url('@special.ImageUrl')">
-            <div class="pizza-info">
-        <span class="title"> @special.Name</span>
-        @special.Description
-        <span class="price"> @special.BasePrice</span>
-        </div>
-        </li>
-    }
-}
-  </ul>
+    <h1>Blazing Pizzas</h1>
+    <ul class="pizza-cards">
+        @if (specials != null)
+        {
+            foreach (var special in specials)
+            {
+                <li style="background-image: url('@special.ImageUrl')">
+                    <div class="pizza-info">
+                        <span class="title"> @special.Name</span>
+                        @special.Description
+                        <span class="price"> @special.BasePrice</span>
+                    </div>
+                </li>
+            }
+        }
+    </ul>
 </div>
 
 @code {
     //List<PizzaSpecial> specials = new();
     IEnumerable<PizzaSpecial> specials;
 
-    protected override void OnInitialized()
+    // A good place to call the service and obtain data is in the OnInitializedAsync method
+    // This event fires when the component's initialization is complete and it has received initial parameters but before
+    // the page is rendered and displayed to the user.
+    protected override async Task<IEnumerable<PizzaSpecial>> OnInitializedAsync()
     {
+        // works but: return specials = await pizzaSvc.GetPizzasAsync(sqc);
 
-//                        _logger.LogInformation("customer index get");
-            using var conn = sqc.Sqlite3Conn;
-            @* var p = new { sf1 = LCF.FilterValue + "%" };
-            //var p2 = new { sf2 = "Address" };
-            string fieldName = LCF.FilterField ?? "Name"; //todo "Name";
-            string SortField = LCF.SortField ?? "Name"; //todo "Name";
-            string SortOrder = LCF.SortOrder ? "DESC" : ""; //todo "Name"; *@
-//            var sql = $"select * from Customer where {fieldName} like @sf1 order by {SortField} {SortOrder}";
-            var sql = "select * from Pizza";
-            specials = conn.Query<PizzaSpecial>(sql); //todo: param, p); //todo:.ToList(); //todo: using
-            @* foreach (var c in Customers)
-            {
-                Console.WriteLine(c.Name);
-            } *@
-@* {
-new PizzaSpecial{Name = "The Baconatorizor", BasePrice=11.99M, Description="It has EVERY kind of bacon",
-ImageUrl="img/pizzas/bacon.jpg"},
-       new PizzaSpecial { Name = "Buffalo chicken", BasePrice =  12.75M, Description = "Spicy chicken, hot sauce, and blue cheese, guaranteed to warm you up", ImageUrl="img/pizzas/meaty.jpg"},
-            new PizzaSpecial { Name = "Veggie Delight", BasePrice =  11.5M, Description = "It's like salad, but on a pizza", ImageUrl="img/pizzas/salad.jpg"},
-            new PizzaSpecial { Name = "Margherita", BasePrice =  9.99M, Description = "Traditional Italian pizza with tomatoes and basil", ImageUrl="img/pizzas/margherita.jpg"},
-            new PizzaSpecial { Name = "Basic Cheese Pizza", BasePrice =  11.99M, Description = "It's cheesy and delicious. Why wouldn't you want one?", ImageUrl="img/pizzas/cheese.jpg"},
-            new PizzaSpecial { Name = "Classic pepperoni", BasePrice =  10.5M, Description = "It's the pizza you grew up with, but Blazing hot!", ImageUrl="img/pizzas/pepperoni.jpg" }               
+        // _logger.LogInformation("customer index get");
+        using var conn = sqc.Sqlite3Conn;
 
-}
-        ); *@
+        @* var p = new { sf1 = LCF.FilterValue + "%" };
+//var p2 = new { sf2 = "Address" };
+string fieldName = LCF.FilterField ?? "Name"; //todo "Name";
+string SortField = LCF.SortField ?? "Name"; //todo "Name";
+string SortOrder = LCF.SortOrder ? "DESC" : ""; //todo "Name"; *@
+
+        // var sql = $"select * from Customer where {fieldName} like @sf1 order by {SortField} {SortOrder}";
+        var sql = "select * from Pizza";
+        specials = await conn.QueryAsync<PizzaSpecial>(sql); //todo: param, p); //todo:.ToList(); //todo: using
+        return specials;
     }
 }
