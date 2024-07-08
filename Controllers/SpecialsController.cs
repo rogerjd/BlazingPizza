@@ -5,6 +5,8 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Dapper;
 
+//json
+//https://learn.microsoft.com/en-us/training/modules/interact-with-data-blazor-web-apps/5-exercise-access-data-from-blazor-components        
 namespace BlazingPizza.Controllers
 {
     [Route("specials")]
@@ -17,19 +19,14 @@ namespace BlazingPizza.Controllers
             _SQLite3CtrlX = SQLite3CtrlX;
         }
 
+        //json
+        //https://learn.microsoft.com/en-us/training/modules/interact-with-data-blazor-web-apps/5-exercise-access-data-from-blazor-components        
         [HttpGet]
         public async Task<ActionResult<List<dynamic>>> GetSpecials()
         {
             using var conn = _SQLite3CtrlX.Sqlite3Conn;
             var sql = "select * from Pizza";
             var res = conn.Query(sql);
-            
-            
-            foreach (var r in res)
-            {
-                Console.WriteLine(res);
-            }
-
             return res.ToList();
         }
     }

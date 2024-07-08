@@ -4,13 +4,14 @@
 @using Dapper
 @inject ISQLite3Ctrl sqc
 @inject PizzaService pizzaSvc
+@inject HttpClient HttpClient
 
 <PageTitle>Home</PageTitle>
 
 <div class="main">
     <h1>Blazing Pizzas</h1>
     <ul class="pizza-cards">
-        @if (specials != null)
+        @if (specials != null) @*By checking for null in the @if code block, you ensure that Blazor won't try to display pizza details before data is obtained from the service.*@
         {
             foreach (var special in specials)
             {
@@ -22,9 +23,26 @@
                     </div>
                 </li>
             }
+        } else {
+            <p>We're finding out what pizzas are available today...</p>
         }
     </ul>
 </div>
+
+<table>
+    <thead>
+        <th>Pizza Name</th>
+    </thead>
+    <tbody>
+        @foreach(var pizza in specials)
+        {
+<tr>
+    <td>@pizza.Name</td>
+</tr>
+        }
+
+    </tbody>
+</table>
 
 @code {
     //List<PizzaSpecial> specials = new();
@@ -45,6 +63,8 @@
 string fieldName = LCF.FilterField ?? "Name"; //todo "Name";
 string SortField = LCF.SortField ?? "Name"; //todo "Name";
 string SortOrder = LCF.SortOrder ? "DESC" : ""; //todo "Name"; *@
+
+        
 
         // var sql = $"select * from Customer where {fieldName} like @sf1 order by {SortField} {SortOrder}";
         var sql = "select * from Pizza";

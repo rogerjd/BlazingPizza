@@ -9,6 +9,8 @@ builder.Services.AddRazorComponents()
 builder.Services.AddScoped<ISQLite3Ctrl, SQLite3Ctrl>();
 builder.Services.AddControllers();
 builder.Services.AddSingleton<PizzaService>();
+builder.Services.AddHttpClient();
+
 // services must agree
 
 var app = builder.Build();
