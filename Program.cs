@@ -10,8 +10,7 @@ builder.Services.AddScoped<ISQLite3Ctrl, SQLite3Ctrl>();
 builder.Services.AddControllers();
 builder.Services.AddSingleton<PizzaService>();
 builder.Services.AddHttpClient();
-
-// services must agree
+// services must agree, DI, dependency injection; permanent service vs per request(scoped), it is problem
 
 var app = builder.Build();
 
