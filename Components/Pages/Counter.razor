@@ -10,6 +10,16 @@
 <button class="btn btn-primary" @onclick="IncrementCount">Click me Inc</button>
 <button class="btn btn-primary" @onclick="DecrementCount">Click me Dec</button>
 
+@*
+    CS1503: Argument 2: cannot convert from 'void' to ... indicates that there is a mismatch in the type expected and the type being provided for the second argument in a method call. 
+    to the fact that you are trying to use a method DecrementCount that returns void as an event handler in a manner that expects a delegate returning a Task. In Blazor, @onclick expects an EventCallback which can handle async operations.    
+
+    Without Parameters: Blazor can directly bind to 
+        IncrementCount() because it matches the expected signature.
+    With Parameters: You use a 
+        lambda () => DecrementCount(3) to capture the parameter 3 and pass it to DecrementCount.
+*@
+
 @code {
     private int currentCount = 0;
 
