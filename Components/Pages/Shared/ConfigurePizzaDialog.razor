@@ -1,0 +1,14 @@
+@inject HttpClient HttpClient
+
+<div class="dialog-container">
+    @Pizza.Name
+</div>
+
+@*the idea here is to show the selected pizza, one of the si*@
+@code {
+    [Parameter]
+    public Pizza Pizza
+    {
+        get; set;
+    }
+}
