@@ -11,7 +11,8 @@
 <div class="main">
     <h1>Blazing Pizzas</h1>
     <ul class="pizza-cards">
-        @if (specials != null) @*By checking for null in the @if code block, you ensure that Blazor won't try to display pizza details before data is obtained from the service.*@
+        @if (specials != null) @*By checking for null in the @if code block, you ensure that Blazor won't try to display
+        pizza details before data is obtained from the service.*@
         {
             foreach (var special in specials)
             {
@@ -23,7 +24,9 @@
                     </div>
                 </li>
             }
-        } else {
+        }
+        else
+        {
             <p>We're finding out what pizzas are available today...</p>
         }
     </ul>
@@ -34,19 +37,26 @@
         <th>Pizza Name</th>
     </thead>
     <tbody>
-        @foreach(var pizza in specials)
+        @foreach (var pizza in specials)
         {
-<tr>
-    <td>@pizza.Name</td>
-</tr>
+            <tr>
+                <td>@pizza.Name</td>
+            </tr>
         }
 
     </tbody>
 </table>
 
+@if (showingConfigureDialog)
+{
+    <ConfigurePizzaDialog Pizza="configuringPizza"></ConfigurePizzaDialog>
+}
+
 @code {
     //List<PizzaSpecial> specials = new();
     IEnumerable<PizzaSpecial> specials;
+    Pizza configuringPizza;
+    bool showingConfigureDialog;
 
     // A good place to call the service and obtain data is in the OnInitializedAsync method
     // This event fires when the component's initialization is complete and it has received initial parameters but before
@@ -64,11 +74,23 @@ string fieldName = LCF.FilterField ?? "Name"; //todo "Name";
 string SortField = LCF.SortField ?? "Name"; //todo "Name";
 string SortOrder = LCF.SortOrder ? "DESC" : ""; //todo "Name"; *@
 
-        
+
 
         // var sql = $"select * from Customer where {fieldName} like @sf1 order by {SortField} {SortOrder}";
         var sql = "select * from Pizza";
         specials = await conn.QueryAsync<PizzaSpecial>(sql); //todo: param, p); //todo:.ToList(); //todo: using
         return specials;
+    }
+
+    void ShowConfigurePizzaDialog(PizzaSpecial special)
+    {
+        configuringPizza = new Pizza()
+        {
+            Special = special,
+            SpecialID = special.ID,
+            Size - Pizza.DefaultSize
+        }
+
+        showingConfigureDialog = true;
     }
 }
