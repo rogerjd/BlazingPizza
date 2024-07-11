@@ -1,10 +1,12 @@
 ﻿@page "/"
 @using BlazingPizza.Models
 @using BlazingPizza.Data
+@using BlazingPizza.Pages.Shared
 @using Dapper
 @inject ISQLite3Ctrl sqc
 @inject PizzaService pizzaSvc
 @inject HttpClient HttpClient
+@using BlazingPizza.Components
 
 <PageTitle>Home</PageTitle>
 
@@ -47,6 +49,8 @@
     </tbody>
 </table>
 
+<TestComp></TestComp>
+
 @if (showingConfigureDialog)
 {
     <ConfigurePizzaDialog Pizza="configuringPizza"></ConfigurePizzaDialog>
@@ -80,17 +84,19 @@ string SortOrder = LCF.SortOrder ? "DESC" : ""; //todo "Name"; *@
         var sql = "select * from Pizza";
         specials = await conn.QueryAsync<PizzaSpecial>(sql); //todo: param, p); //todo:.ToList(); //todo: using
         return specials;
+
+        ShowConfigurePizzaDialog(new PizzaSpecial{ Name = "ABC"});
     }
 
     void ShowConfigurePizzaDialog(PizzaSpecial special)
     {
-        configuringPizza = new Pizza()
-        {
-            Special = special,
-            SpecialID = special.ID,
-            Size - Pizza.DefaultSize
-        }
+        @* configuringPizza = new Pizza()
+            {
+                Special = special,
+                SpecialID = special.ID,
+                Size - Pizza.DefaultSize
+            }
 
-        showingConfigureDialog = true;
+        showingConfigureDialog = true *@
     }
 }
