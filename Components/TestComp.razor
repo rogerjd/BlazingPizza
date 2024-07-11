@@ -5,3 +5,143 @@
     <h3>Test Component</h3>
 </div>
 
+@*
+Can you show how to change the data a Blazor component displays? Here is the component  <div>
+    <h3>Test Component</h3>
+</div>
+When it is placed on a parent page, suppose there is an input and when a button is clicked the  input text should be shown in the component.
+ChatGPT
+To change the data a Blazor component displays based on user input from a parent page, you can use event binding and parameter passing. Here's a step-by-step guide to achieve this:
+
+1. Create the Child Component
+First, create the child component TestComponent.razor that will display the input text.
+
+razor
+Copy code
+<!-- TestComponent.razor -->
+<div>
+    <h3>Test Component</h3>
+    <p>@DisplayText</p>
+</div>
+
+@code {
+    [Parameter]
+    public string DisplayText { get; set; }
+}
+2. Create the Parent Page
+Next, create the parent page that contains an input field and a button. When the button is clicked, the input text will be passed to the TestComponent.
+
+razor
+Copy code
+@page "/parent"
+
+<h3>Parent Page</h3>
+
+<input @bind="inputText" placeholder="Enter text" />
+<button @onclick="UpdateText">Update Text</button>
+
+<TestComponent DisplayText="displayText"></TestComponent>
+
+@code {
+    private string inputText;
+    private string displayText;
+
+    private void UpdateText()
+    {
+        displayText = inputText;
+    }
+}
+Explanation
+Child Component (TestComponent.razor):
+
+The component has a DisplayText parameter that will be set by the parent.
+This parameter is displayed inside a <p> element.
+Parent Page (Parent.razor):
+
+There is an input field bound to the inputText variable using the @bind directive.
+A button is provided to trigger the UpdateText method.
+The TestComponent is included with the DisplayText parameter bound to the displayText variable.
+When the button is clicked, the UpdateText method sets displayText to the value of inputText, causing the TestComponent to re-render with the new text.
+Full Example
+TestComponent.razor
+razor
+Copy code
+<div>
+    <h3>Test Component</h3>
+    <p>@DisplayText</p>
+</div>
+
+@code {
+    [Parameter]
+    public string DisplayText { get; set; }
+}
+Parent.razor
+razor
+Copy code
+@page "/parent"
+
+<h3>Parent Page</h3>
+
+<input @bind="inputText" placeholder="Enter text" />
+<button @onclick="UpdateText">Update Text</button>
+
+<TestComponent DisplayText="displayText"></TestComponent>
+
+@code {
+    private string inputText;
+    private string displayText;
+
+    private void UpdateText()
+    {
+        displayText = inputText;
+    }
+}
+This setup ensures that the TestComponent dynamically updates its displayed text based on user input from the parent page.
+
+That's very helpful, thank you.
+ChatGPT
+You're welcome! I'm glad you found it helpful. If you have any more questions or need further assistance, feel free to ask!
+
+When binding: <input @bind="inputText" placeholder="Enter text" /> the bound variable is both written and read by the input. That is correct?
+ChatGPT
+Yes, that's correct. In Blazor, when you use the @bind directive on an input element, it creates a two-way data binding between the input element and the bound variable. This means the bound variable (inputText in your example) will be both read from and written to by the input element.
+
+Here's how it works:
+
+Reading: When the page initially renders, the value of the inputText variable is read and used to set the value of the input element.
+Writing: When the user types in the input element, the value of the input element is written back to the inputText variable.
+Example:
+razor
+Copy code
+<input @bind="inputText" placeholder="Enter text" />
+
+@code {
+    private string inputText;
+}
+In this example:
+
+The input element's value is initially set to the value of inputText.
+Any changes made by the user in the input element will automatically update the inputText variable.
+How Two-Way Binding Works
+The @bind directive is a shorthand for combining the value attribute and the onchange event. For example, the following code:
+
+razor
+Copy code
+<input @bind="inputText" />
+Is equivalent to:
+
+razor
+Copy code
+<input value="@inputText" @onchange="event => inputText = event.Value.ToString()" />
+This shorthand makes it convenient to keep the UI and the data model in sync without having to manually handle the input event and assign values.
+
+Additional Details:
+Immediate Updates: You can use @bind:event="oninput" to update the bound variable on every keystroke instead of waiting for the onchange event (which occurs when the input loses focus).
+
+razor
+Copy code
+<input @bind="inputText" @bind:event="oninput" />
+Custom Events: You can also create custom event handlers and bind them to input elements to achieve more complex behavior if needed.
+
+Two-way binding in Blazor simplifies the process of keeping your component state and the UI in sync, making it easier to build interactive applications.
+*@
