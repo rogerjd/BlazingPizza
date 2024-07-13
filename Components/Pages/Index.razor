@@ -41,7 +41,8 @@
     <tbody>
         @foreach (var pizza in specials)
         {
-            <tr>
+            <tr @onclick="@(() => TableRowOnClick(pizza.Id))">
+                <td>@pizza.Id</td>
                 <td>@pizza.Name</td>
                 <td><button @onclick="ReportPointerLocation"> tbl btn @pizza.Name
                     </button></td>
@@ -127,5 +128,10 @@ string SortOrder = LCF.SortOrder ? "DESC" : ""; //todo "Name"; *@
     private void UpdateHeading()
     {
         headingValue = $"New heading ({DateTime.Now})";
+    }
+
+    void TableRowOnClick(int id)
+    {
+
     }
 }
