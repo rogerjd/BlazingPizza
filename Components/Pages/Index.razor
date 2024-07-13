@@ -16,9 +16,9 @@
         @if (specials != null) @*By checking for null in the @if code block, you ensure that Blazor won't try to display
         pizza details before data is obtained from the service.*@
         {
-            foreach (var special in specials)
+            @foreach (var special in specials)
             {
-                <li style="background-image: url('@special.ImageUrl')">
+                <li @onclick="@(() => ShowConfigurePizzaDialog(special))" style="background-image: url('@special.ImageUrl')">
                     <div class="pizza-info">
                         <span class="title"> @special.Name</span>
                         @special.Description
@@ -43,11 +43,15 @@
         {
             <tr>
                 <td>@pizza.Name</td>
+                <td><button @onclick="ReportPointerLocation"> tbl btn @pizza.Name
+                    </button></td>
             </tr>
         }
 
     </tbody>
 </table>
+
+<button @onclick='() => ShowConfigurePizzaDialog(new PizzaSpecial{ Name = "ABCdef"})'>another test</button>
 
 <TestComp></TestComp>
 
@@ -56,11 +60,19 @@
     <ConfigurePizzaDialog Pizza="configuringPizza"></ConfigurePizzaDialog>
 }
 
+<h2>@headingValue</h2>
+<p>
+    <button @onclick="UpdateHeading">
+        Update heading
+    </button>
+</p>
+
 @code {
     //List<PizzaSpecial> specials = new();
     IEnumerable<PizzaSpecial> specials;
     Pizza configuringPizza;
     bool showingConfigureDialog;
+    private string headingValue = "Initial heading";
 
     // A good place to call the service and obtain data is in the OnInitializedAsync method
     // This event fires when the component's initialization is complete and it has received initial parameters but before
@@ -84,7 +96,7 @@ string SortOrder = LCF.SortOrder ? "DESC" : ""; //todo "Name"; *@
         var sql = "select * from Pizza";
         specials = await conn.QueryAsync<PizzaSpecial>(sql); //todo: param, p); //todo:.ToList(); //todo: using
 
-        ShowConfigurePizzaDialog(new PizzaSpecial{ Name = "ABC"});
+        // ShowConfigurePizzaDialog(new PizzaSpecial{ Name = "ABC"});
         @* /return Task.Complete *@
     }
 
@@ -99,5 +111,21 @@ string SortOrder = LCF.SortOrder ? "DESC" : ""; //todo "Name"; *@
             };
 
         showingConfigureDialog = true;
+    }
+
+    private void tst()
+    {
+        Console.WriteLine("on clicke");
+    }
+
+    private void ReportPointerLocation(MouseEventArgs e)
+    {
+        Console.WriteLine("on clicke");
+        Console.WriteLine($"Mouse coordinates: {e.ScreenX}:{e.ScreenY}");
+    }
+
+    private void UpdateHeading()
+    {
+        headingValue = $"New heading ({DateTime.Now})";
     }
 }
