@@ -1,0 +1,68 @@
+In Blazor, I have <tr onclick>  it works. But, on click I would like to paint the selected row and only the selected row yellow. I don' know how to do this in the event, can you show how?
+
+To highlight a selected row in a table when it is clicked in Blazor, you can achieve this by using a combination of event handling and CSS. Here's a step-by-step guide on how to implement this:
+
+1. **Create a CSS class for the highlighted row:**
+
+```css
+<style>
+    .highlight {
+        background-color: yellow;
+    }
+</style>
+```
+
+2. **Set up the Blazor component with a table:**
+
+```razor
+@page "/highlightrow"
+
+@* The selected row variable *@
+@code {
+    private int? selectedRowIndex = null;
+
+    private void SelectRow(int index)
+    {
+        selectedRowIndex = index;
+    }
+}
+```
+
+3. **Create the table with rows that can be clicked:**
+
+```razor
+<table>
+    <thead>
+        <tr>
+            <th>Header 1</th>
+            <th>Header 2</th>
+            <th>Header 3</th>
+        </tr>
+    </thead>
+    <tbody>
+        @for (int i = 0; i < 10; i++)
+        {
+            <tr onclick="() => SelectRow(i)" class="@(selectedRowIndex == i ? "highlight" : "")">
+                <td>@($"Row {i} - Column 1")</td>
+                <td>@($"Row {i} - Column 2")</td>
+                <td>@($"Row {i} - Column 3")</td>
+            </tr>
+        }
+    </tbody>
+</table>
+```
+
+### Explanation:
+
+1. **CSS Class:** We defined a `.highlight` class in the CSS to apply a yellow background color.
+
+2. **Blazor Code:** 
+   - We have a nullable `selectedRowIndex` variable that keeps track of the currently selected row.
+   - The `SelectRow` method sets `selectedRowIndex` to the index of the clicked row.
+
+3. **Table Rows:** 
+   - We use a loop to generate table rows.
+   - Each row has an `onclick` event that calls the `SelectRow` method with the row's index.
+   - We use a conditional class binding to apply the `highlight` class only to the selected row by comparing `selectedRowIndex` with the row's index.
+
+This approach ensures that only the clicked row gets highlighted, and the highlight is removed from the previously selected row.

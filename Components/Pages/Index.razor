@@ -52,6 +52,24 @@
     </tbody>
 </table>
 
+<table>
+    <thead>
+        <th>Pizza Name, selected row</th>
+    </thead>
+    <tbody>
+        @foreach (var pizza in specials)
+        {
+            <tr @onclick="@(() => selectRow(pizza.Id))" class="@(selectedRowID == pizza.Id ? "highlight" : "" )">
+                <td>@pizza.Id</td>
+                <td>@pizza.Name</td>
+                <td><button @onclick="ReportPointerLocation"> tbl btn @pizza.Name
+                    </button></td>
+            </tr>
+        }
+
+    </tbody>
+</table>
+
 <button @onclick='() => ShowConfigurePizzaDialog(new PizzaSpecial{ Name = "ABCdef"})'>another test</button>
 
 <TestComp></TestComp>
@@ -75,6 +93,14 @@
     bool showingConfigureDialog;
     private string headingValue = "Initial heading";
     int PizzaID;
+
+    int? selectedRowID = null;
+    void selectRow(int id)
+    {
+        selectedRowID = id;
+    }
+
+
 
     // A good place to call the service and obtain data is in the OnInitializedAsync method
     // This event fires when the component's initialization is complete and it has received initial parameters but before
