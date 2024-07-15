@@ -1,3 +1,99 @@
+Now, in addition to using the mouss (on click). I;d like to allow the user to use the keyboard, up/down keys. Can you show how?
+Certainly! To enable keyboard navigation for selecting rows in your Blazor table, you can handle keyboard events and update the selected row based on the arrow key presses. Here's how you can achieve this:
+
+### Updated Component File (HighlightRow.razor)
+
+```razor
+@page "/highlightrow"
+
+<style>
+    .highlight {
+        background-color: yellow;
+    }
+</style>
+
+@code {
+    private List<Item> items = new List<Item>
+    {
+        new Item { Id = 1, Column1 = "Row 1 - Column 1", Column2 = "Row 1 - Column 2", Column3 = "Row 1 - Column 3" },
+        new Item { Id = 2, Column1 = "Row 2 - Column 1", Column2 = "Row 2 - Column 2", Column3 = "Row 2 - Column 3" },
+        new Item { Id = 3, Column1 = "Row 3 - Column 1", Column2 = "Row 3 - Column 2", Column3 = "Row 3 - Column 3" },
+        // Add more items as needed
+    };
+
+    private int? selectedRowId = null;
+
+    private void SelectRow(int id)
+    {
+        selectedRowId = id;
+    }
+
+    private void HandleKeyPress(KeyboardEventArgs args)
+    {
+        if (args.Key == "ArrowUp" || args.Key == "ArrowDown")
+        {
+            var currentIndex = selectedRowId ?? -1;
+            int newIndex;
+
+            if (args.Key == "ArrowUp")
+            {
+                newIndex = currentIndex > 0 ? currentIndex - 1 : items.Count - 1;
+            }
+            else // ArrowDown
+            {
+                newIndex = currentIndex < items.Count - 1 ? currentIndex + 1 : 0;
+            }
+
+            selectedRowId = items[newIndex].Id;
+        }
+    }
+}
+
+<table>
+    <thead>
+        <tr>
+            <th>Header 1</th>
+            <th>Header 2</th>
+            <th>Header 3</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in items)
+        {
+            <tr tabindex="0" @onkeydown="HandleKeyPress"
+                onclick="() => SelectRow(item.Id)"
+                class="@(selectedRowId == item.Id ? "highlight" : "")">
+                <td>@item.Column1</td>
+                <td>@item.Column2</td>
+                <td>@item.Column3</td>
+            </tr>
+        }
+    </tbody>
+</table>
+```
+
+### Explanation
+
+1. **Keyboard Navigation Setup:**
+   - Added a `HandleKeyPress` method to handle keyboard events (`@onkeydown="HandleKeyPress"`).
+   - Used `tabindex="0"` to make each `<tr>` focusable, allowing it to receive keyboard events.
+
+2. **HandleKeyPress Method:**
+   - Checks if the pressed key is `ArrowUp` or `ArrowDown`.
+   - Updates `selectedRowId` based on the current selected row (`currentIndex`) and the direction of the arrow key.
+
+3. **Component Changes:**
+   - Enhanced the `<tr>` element with `tabindex="0"` to enable keyboard focus.
+   - Added `@onkeydown="HandleKeyPress"` to handle keyboard events on the row.
+
+### Usage
+
+- **Mouse Click:** Clicking on a row updates `selectedRowId` and applies the `highlight` class.
+- **Keyboard Navigation:** Pressing `ArrowUp` or `ArrowDown` keys navigates through rows and updates `selectedRowId`.
+
+This setup provides both mouse and keyboard navigation capabilities for selecting rows in your Blazor table, enhancing usability and accessibility. Adjust as needed based on your specific requirements or UI design.
+
+=======================================================================
 In Blazor, I have <tr onclick>  it works. But, on click I would like to paint the selected row and only the selected row yellow. I don' know how to do this in the event, can you show how?
 
 To highlight a selected row in a table when it is clicked in Blazor, you can achieve this by using a combination of event handling and CSS. Here's a step-by-step guide on how to implement this:
