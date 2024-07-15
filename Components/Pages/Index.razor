@@ -57,10 +57,11 @@
         <th>Pizza Name, selected row</th>
     </thead>
     <tbody>
-        @foreach (var pizza in specials)
+        @for (int RowNo = 0; RowNo < specials.Count(); RowNo++)
         {
-            <tr tabindex="0" @onkeydown="HandleKeyPress" @onclick="@(() => selectRow(pizza.Id))"
-                class="@(selectedRowID == pizza.Id ? "highlight" : "" )">
+            var pizza = specials[RowNo];
+            int rn = RowNo;
+            <tr tabindex="0" @onclick="@(() => selectRow(rn))" class="@(selectedRowNo == rn ? "highlight" : "" )">
                 <td>@pizza.Id</td>
                 <td>@pizza.Name</td>
                 <td><button @onclick="ReportPointerLocation"> tbl btn @pizza.Name
@@ -95,29 +96,29 @@
     private string headingValue = "Initial heading";
     int PizzaID;
 
-    int? selectedRowID = null;
+    int? selectedRowNo = null;
     void selectRow(int id)
     {
-        selectedRowID = id;
+        selectedRowNo = id;
     }
 
     void HandleKeyPress(KeyboardEventArgs args)
     {
         if (args.Key == "ArrowUp" || args.Key == "ArrowDown")
         {
-            var currentIndex = selectedRowID ?? -1;
+            var currentIndex = selectedRowNo ?? 0;
             int newIndex;
 
             if (args.Key == "ArrowUp")
             {
-                newIndex = currentIndex > 0 ? currentIndex - 1 : specials.Count() - 1;
+                newIndex = currentIndex > 1 ? currentIndex - 1 : 1;
             }
             else // ArrowDown
             {
-                newIndex = currentIndex < specials.Count() - 1 ? currentIndex + 1 : 0;
+                newIndex = currentIndex < specials.Count() ? currentIndex + 1 : specials.Count();
             }
 
-            selectedRowID = specials[newIndex].Id;
+            selectedRowNo = newIndex; // specials[newIndex].Id;
         }
     }
 
