@@ -61,7 +61,8 @@
         {
             var pizza = specials[RowNo];
             int rn = RowNo;
-            <tr tabindex="0" @onclick="@(() => selectRow(rn))" class="@(selectedRowNo == rn ? "highlight" : "" )">
+            <tr tabindex="0" @onclick="@(() => selectRow(rn))" class="@(selectedRowNo == rn ? "highlight" : "" )"
+                @onkeydown="HandleKeyPress">
                 <td>@pizza.Id</td>
                 <td>@pizza.Name</td>
                 <td><button @onclick="ReportPointerLocation"> tbl btn @pizza.Name
@@ -102,8 +103,21 @@
         selectedRowNo = id;
     }
 
+    @* KeyPress doesn't work unless the control can get focus, editable*@
     void HandleKeyPress(KeyboardEventArgs args)
     {
+        if (selectedRowNo == null)
+            return;
+
+         if (args.Key == "ArrowUp"){
+            if (selectedRowNo > 0)  
+                selectedRowNo--;
+         } else if (args.Key == "ArrowDown"){
+            if (selectedRowNo < specials.Count()-1){
+                selectedRowNo++;
+            }
+         }
+/*
         if (args.Key == "ArrowUp" || args.Key == "ArrowDown")
         {
             var currentIndex = selectedRowNo ?? 0;
@@ -120,6 +134,7 @@
 
             selectedRowNo = newIndex; // specials[newIndex].Id;
         }
+*/        
     }
 
 
