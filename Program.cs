@@ -1,5 +1,6 @@
 using BlazingPizza.Components;
 using BlazingPizza.Data;
+using BlazingPizza.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -10,6 +11,7 @@ builder.Services.AddScoped<ISQLite3Ctrl, SQLite3Ctrl>();
 builder.Services.AddControllers();
 builder.Services.AddSingleton<PizzaService>();
 builder.Services.AddHttpClient();
+builder.Services.AddScoped<OrderState>();
 // services must agree, DI, dependency injection; permanent service vs per request(scoped), it is problem
 
 var app = builder.Build();

@@ -7,6 +7,8 @@
 @inject PizzaService pizzaSvc
 @inject HttpClient HttpClient
 @using BlazingPizza.Components
+@using BlazingPizza.Services
+@inject OrderState OrderState
 
 <PageTitle>Home</PageTitle>
 
@@ -18,7 +20,7 @@
         {
             @foreach (var special in specials)
             {
-                <li @onclick="@(() => ShowConfigurePizzaDialog(special))" style="background-image: url('@special.ImageUrl')">
+                <li @onclick="@(() => OrderState.ShowConfiguringPizzaDialog(special))" style="background-image: url('@special.ImageUrl')">
                     <div class="pizza-info">
                         <span class="title"> @special.Name</span>
                         @special.Description
@@ -73,13 +75,13 @@
     </tbody>
 </table>
 
-<button @onclick='() => ShowConfigurePizzaDialog(new PizzaSpecial{ Name = "ABCdef"})'>another test</button>
+<button @onclick='() => OrderState.ShowConfiguringPizzaDialog(new PizzaSpecial{ Name = "ABCdef"})'>another test</button>
 
 <TestComp></TestComp>
 
-@if (showingConfigureDialog)
+@if (OrderState.ShowingConfigureDialog)
 {
-    <ConfigurePizzaDialog Pizza="configuringPizza"></ConfigurePizzaDialog>
+    <ConfigurePizzaDialog Pizza="OrderState.ConfiguringPizza"></ConfigurePizzaDialog>
 }
 
 <h2>@headingValue</h2>
@@ -89,9 +91,21 @@
     </button>
 </p>
 
+<div class="sidebar">
+    @if (order.Pizzas.Any())
+    {
+        <div class="order-contents">
+            <h2>Your order</h2>
+
+        </div>
+    }
+
+</div>
+
 @code {
     //List<PizzaSpecial> specials = new();
     List<PizzaSpecial> specials;
+    Order order => OrderState.Order;
     Pizza configuringPizza;
     bool showingConfigureDialog;
     private string headingValue = "Initial heading";
@@ -109,32 +123,36 @@
         if (selectedRowNo == null)
             return;
 
-         if (args.Key == "ArrowUp"){
-            if (selectedRowNo > 0)  
+        if (args.Key == "ArrowUp")
+        {
+            if (selectedRowNo > 0)
                 selectedRowNo--;
-         } else if (args.Key == "ArrowDown"){
-            if (selectedRowNo < specials.Count()-1){
+        }
+        else if (args.Key == "ArrowDown")
+        {
+            if (selectedRowNo < specials.Count() - 1)
+            {
                 selectedRowNo++;
             }
-         }
-/*
+        }
+        /*
         if (args.Key == "ArrowUp" || args.Key == "ArrowDown")
         {
-            var currentIndex = selectedRowNo ?? 0;
-            int newIndex;
+        var currentIndex = selectedRowNo ?? 0;
+        int newIndex;
 
-            if (args.Key == "ArrowUp")
-            {
-                newIndex = currentIndex > 1 ? currentIndex - 1 : 1;
-            }
-            else // ArrowDown
-            {
-                newIndex = currentIndex < specials.Count() ? currentIndex + 1 : specials.Count();
-            }
-
-            selectedRowNo = newIndex; // specials[newIndex].Id;
+        if (args.Key == "ArrowUp")
+        {
+        newIndex = currentIndex > 1 ? currentIndex - 1 : 1;
         }
-*/        
+        else // ArrowDown
+        {
+        newIndex = currentIndex < specials.Count() ? currentIndex + 1 : specials.Count();
+        }
+
+        selectedRowNo = newIndex; // specials[newIndex].Id;
+        }
+        */
     }
 
 
@@ -163,19 +181,6 @@ string SortOrder = LCF.SortOrder ? "DESC" : ""; //todo "Name"; *@
         specials = res.ToList();
         // ShowConfigurePizzaDialog(new PizzaSpecial{ Name = "ABC"});
         @* /return Task.Complete *@
-    }
-
-    void ShowConfigurePizzaDialog(PizzaSpecial special)
-    {
-        configuringPizza = new Pizza()
-            {
-                Name = special.Name,
-                //Special = special,
-                //SpecialID = special.ID
-                //Size = Pizza.DefaultSize
-            };
-
-        showingConfigureDialog = true;
     }
 
     private void tst()
