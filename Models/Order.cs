@@ -7,7 +7,7 @@ namespace BlazingPizza.Models
 {
     public class Order
     {
- public int OrderId { get; set; }
+        public int OrderId { get; set; }
 
         public string UserId { get; set; }
 
@@ -19,6 +19,6 @@ namespace BlazingPizza.Models
 
         public decimal GetTotalPrice() => Pizzas.Sum(p => p.GetTotalPrice());
 
-        public string GetFormattedTotalPrice() => GetTotalPrice().ToString("0.00");        
+        public string GetFormattedTotalPrice() => GetTotalPrice().ToString("0.00");
     }
 }
