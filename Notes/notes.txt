@@ -4,6 +4,5 @@ genl
 
 git clone https://github.com/MicrosoftDocs/mslearn-interact-with-data-blazor-web-apps.git BlazingPizza
 bookmark, upto
-    20240717
-        https://learn.microsoft.com/en-us/training/modules/interact-with-data-blazor-web-apps/9-exercise-bind-controls-data-blazor-applications
-            sidebar, order
+    20240719
+        https://learn.microsoft.com/en-us/training/modules/use-pages-routing-layouts-control-blazor-navigation/    
