@@ -106,9 +106,9 @@
                     <div class="item-price">
                         @configuredPizza.GetFormattedTotalPrice()
                     </div>
+                    <a @onclick="@(() => OrderState.RemoveConfiguringPizza(configuredPizza))" class="delete-item">X</a>
                 </div>
             }
-
         </div>
     }
     else

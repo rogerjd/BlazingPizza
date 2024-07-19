@@ -41,5 +41,10 @@ namespace BlazingPizza.Services
 
             ShowingConfigureDialog = false;
         }
+
+        public void RemoveConfiguringPizza(Pizza pizza)
+        {
+            Order.Pizzas.Remove(pizza);
+        }
     }
 }
