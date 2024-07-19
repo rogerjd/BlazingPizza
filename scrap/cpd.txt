@@ -2,9 +2,8 @@
 @inject HttpClient HttpClient
 @using BlazingPizza.Models
 
-<div>
-    @Pizza.Special.Name
-</div>
+<h2>@Pizza.Special.Name</h2>
+@Pizza.Special.Description
 
 <div class="dialog-container">
     <div class="dialog">
